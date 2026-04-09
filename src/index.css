@@ -45,7 +45,6 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Custom tokens */
     --calm-blue: 210 60% 92%;
     --calm-green: 160 40% 90%;
     --warm-peach: 20 60% 93%;
@@ -60,38 +59,49 @@
 
     --gradient-calm: linear-gradient(135deg, hsl(174 62% 40%), hsl(200 60% 50%));
     --gradient-hero: linear-gradient(135deg, hsl(174 62% 92%), hsl(210 60% 92%), hsl(260 40% 93%));
-    --shadow-soft: 0 4px 20px -4px hsl(210 30% 15% / 0.08);
-    --shadow-card: 0 2px 12px -2px hsl(210 30% 15% / 0.06);
+    --shadow-soft: 0 4px 24px -6px hsl(210 30% 15% / 0.08);
+    --shadow-card: 0 2px 16px -4px hsl(210 30% 15% / 0.06);
+    --shadow-hover: 0 8px 32px -8px hsl(174 62% 40% / 0.15);
+
+    --glass-bg: hsl(0 0% 100% / 0.7);
+    --glass-border: hsl(0 0% 100% / 0.5);
+    --glass-blur: 16px;
 
     font-family: 'Plus Jakarta Sans', sans-serif;
   }
 
   .dark {
-    --background: 210 30% 8%;
+    --background: 220 20% 7%;
     --foreground: 200 20% 92%;
-    --card: 210 25% 12%;
+    --card: 220 18% 11%;
     --card-foreground: 200 20% 92%;
-    --popover: 210 25% 12%;
+    --popover: 220 18% 11%;
     --popover-foreground: 200 20% 92%;
-    --primary: 174 62% 45%;
+    --primary: 174 55% 48%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 25% 18%;
+    --secondary: 220 18% 16%;
     --secondary-foreground: 200 20% 85%;
-    --muted: 210 20% 18%;
-    --muted-foreground: 210 15% 55%;
-    --accent: 220 40% 20%;
-    --accent-foreground: 220 60% 75%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 210 20% 20%;
-    --input: 210 20% 20%;
-    --ring: 174 62% 45%;
-    --calm-blue: 210 40% 18%;
-    --calm-green: 160 30% 16%;
-    --warm-peach: 20 40% 18%;
-    --soft-lavender: 260 30% 18%;
-    --crisis-red: 0 70% 45%;
-    --crisis-bg: 0 50% 12%;
+    --muted: 220 15% 16%;
+    --muted-foreground: 210 12% 55%;
+    --accent: 220 30% 18%;
+    --accent-foreground: 220 50% 75%;
+    --destructive: 0 62% 40%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 174 55% 48%;
+    --calm-blue: 210 30% 16%;
+    --calm-green: 160 25% 14%;
+    --warm-peach: 20 30% 16%;
+    --soft-lavender: 260 25% 16%;
+    --crisis-red: 0 65% 48%;
+    --crisis-bg: 0 40% 12%;
+
+    --glass-bg: hsl(220 18% 11% / 0.7);
+    --glass-border: hsl(220 15% 20% / 0.5);
+    --shadow-soft: 0 4px 24px -6px hsl(0 0% 0% / 0.3);
+    --shadow-card: 0 2px 16px -4px hsl(0 0% 0% / 0.2);
+    --shadow-hover: 0 8px 32px -8px hsl(174 55% 48% / 0.2);
   }
 
   * {
@@ -101,24 +111,50 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: background-color 0.4s ease, color 0.4s ease;
   }
 }
 
 @layer components {
+  /* Glassmorphism card */
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-card);
+    @apply rounded-2xl;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .glass-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+
+  /* Chat bubbles with glassmorphism */
   .chat-bubble-user {
-    @apply bg-primary text-primary-foreground rounded-2xl rounded-br-md px-4 py-3;
+    @apply rounded-2xl rounded-br-sm px-4 py-3;
+    background: var(--gradient-calm);
+    color: hsl(var(--primary-foreground));
     box-shadow: var(--shadow-soft);
   }
 
   .chat-bubble-ai {
-    @apply bg-card text-card-foreground rounded-2xl rounded-bl-md px-4 py-3 border;
+    @apply rounded-2xl rounded-bl-sm px-4 py-3;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    color: hsl(var(--card-foreground));
     box-shadow: var(--shadow-card);
   }
 
   .crisis-banner {
     background: hsl(var(--crisis-bg));
     border: 2px solid hsl(var(--crisis-red));
-    @apply rounded-xl p-4;
+    @apply rounded-2xl p-5;
+    backdrop-filter: blur(8px);
   }
 
   .gradient-calm {
@@ -131,19 +167,95 @@
 
   .emotion-indicator {
     @apply w-3 h-3 rounded-full;
+    transition: background-color 0.3s ease;
+  }
+
+  /* Global button styles */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground font-semibold rounded-xl;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .btn-primary:disabled {
+    @apply opacity-40;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Input focus glow */
+  .input-glow {
+    @apply bg-muted rounded-xl text-sm outline-none;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    border: 1.5px solid transparent;
+  }
+
+  .input-glow:focus {
+    border-color: hsl(var(--primary) / 0.4);
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.1), var(--shadow-soft);
+    background-color: hsl(var(--card));
+  }
+
+  /* Icon micro-interaction */
+  .icon-hover {
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .icon-hover:hover {
+    transform: scale(1.15);
+  }
+
+  /* Skeleton shimmer */
+  .skeleton-shimmer {
+    @apply rounded-lg;
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 25%,
+      hsl(var(--muted-foreground) / 0.08) 50%,
+      hsl(var(--muted)) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* Nav link style */
+  .nav-item {
+    @apply flex flex-col items-center gap-1 rounded-xl text-xs font-medium;
+    transition: all 0.25s ease;
+  }
+
+  .nav-item:hover .icon-hover {
+    transform: translateY(-1px) scale(1.1);
   }
 }
 
-@keyframes breathe-in {
-  0% { transform: scale(1); opacity: 0.6; }
-  100% { transform: scale(1.8); opacity: 1; }
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-@keyframes breathe-out {
-  0% { transform: scale(1.8); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.6; }
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
 
-.breathing-circle {
-  animation: breathe-in 4s ease-in-out infinite alternate;
+@keyframes breathe-glow {
+  0%, 100% { box-shadow: 0 0 30px 10px hsl(174 62% 40% / 0.15); }
+  50% { box-shadow: 0 0 60px 20px hsl(174 62% 40% / 0.3); }
+}
+
+.breathing-glow {
+  animation: breathe-glow 4s ease-in-out infinite;
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
 }
