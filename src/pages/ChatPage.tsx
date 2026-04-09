@@ -6,7 +6,7 @@ import { detectEmotion, EMOTION_LABELS, EMOTION_COLORS, type EmotionResult } fro
 import { storage, type ChatMessage } from "@/lib/storage";
 import { getSystemPrompt } from "@/lib/therapyEngine";
 import CrisisBanner from "@/components/CrisisBanner";
-import { supabase } from "@/integrations/supabase/client";
+
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>(() => storage.getChats());
